@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Список задач{% endblock %}
+
+{% block content %}
+<!-- task_list.html - Страница со списком задач -->
+<div class="container mt-5">
+    <h2>Список всех задач</h2>
+    {% if tasks %}
+        <ul class="list-group">
+            {% for task in tasks %}
+                <li class="list-group-item">
+                    <a href="{% url 'task_edit' task.id %}">{{ task.title }}</a> ({{ task.project.name }})
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Задачи отсутствуют.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+[project]
+name = "project-management-app"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django>=5.1.7",
+    "djangorestframework>=3.15.2",
+    "dotenv>=0.9.9",
+]

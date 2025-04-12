@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block content %}
+{# Страница детального отображения проекта #}
+<div class="container mt-5">
+    <h2>{{ project.name }}</h2>
+    <p>Создан: {{ project.created_at|date:"d.m.Y" }}</p>
+    <p>Код приглашения: {{ project.invite_code }}</p>
+
+    {% if project.owner == user %}
+        <h5 class="mt-4">Участники проекта:</h5>
+        <ul class="list-group mb-4">
+            {% for membership in project.members.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ membership.user.username }}
+                    {% if membership.user != project.owner %}
+                        <a href="{% url 'remove_member' project.id membership.user.id %}" class="btn btn-sm btn-danger">Удалить</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+
+    <hr>
+
+    <div class="row" id="kanban-board">
+        {% for status in statuses %}
+            <div class="col-md-3">
+                <div class="card bg-secondary mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>{{ status.name }}</span>
+                        <a href="{% url 'status_edit' status.id %}" class="btn btn-sm btn-light">Ред.</a>
+                    </div>
+                    <div class="card-body task-list" id="status-{{ status.id }}" data-status-id="{{ status.id }}">
+                        {% for task in tasks %}
+                            {% if task.status and task.status.id == status.id %}
+                                <div class="card mb-2 task-item" id="task-{{ task.id }}" draggable="true" data-task-id="{{ task.id }}">
+                                    <div class="card-body p-2">
+                                        <a href="{% url 'task_edit' task.id %}" class="stretched-link text-decoration-none text-dark">{{ task.title }}</a>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+    <a href="{% url 'status_create' project.id %}" class="btn btn-outline-light">Добавить статус</a>
+    <a href="{% url 'task_create' project.id %}" class="btn btn-primary mt-3">Добавить задачу</a>
+</div>
+
+<script>
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const taskItems = document.querySelectorAll(".task-item");
+        const taskLists = document.querySelectorAll(".task-list");
+
+        taskItems.forEach(task => {
+            task.addEventListener("dragstart", function (e) {
+                e.dataTransfer.setData("text/plain", task.dataset.taskId);
+            });
+        });
+
+        taskLists.forEach(list => {
+            list.addEventListener("dragover", function (e) {
+                e.preventDefault();
+            });
+
+            list.addEventListener("drop", function (e) {
+                e.preventDefault();
+                const taskId = e.dataTransfer.getData("text/plain");
+                const taskElement = document.getElementById("task-" + taskId);
+                const newStatusId = this.dataset.statusId;
+                this.appendChild(taskElement);
+
+                fetch(`/tasks/move/${taskId}/${newStatusId}/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken")
+                    }
+                }).then(response => {
+                    if (!response.ok) {
+                        console.error("Ошибка перемещения задачи");
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

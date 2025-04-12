@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Мои проекты{% endblock %}
+
+{% block content %}
+<!-- Страница со списком проектов пользователя -->
+<div class="container mt-5">
+    <h2 class="mb-4">Мои проекты</h2>
+    <a href="{% url 'project_create' %}" class="btn btn-primary mb-3">Создать проект</a>
+    <a href="{% url 'project_join_by_code' %}" class="btn btn-success mb-3 ms-2">Ввести код проекта</a>
+
+    {% if projects %}
+        <ul class="list-group">
+            {% for project in projects %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{% url 'project_detail' project.id %}">{{ project.name }}</a>
+                    <span class="badge bg-secondary">
+                        Создан: {{ project.created_at|date:"d.m.Y" }}
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Проекты отсутствуют.</p>
+    {% endif %}
+</div>
+{% endblock %}

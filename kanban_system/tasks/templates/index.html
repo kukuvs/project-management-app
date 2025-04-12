@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Главная{% endblock %}
+
+{% comment %}
+Страница приветствия и входа/регистрации.
+{% endcomment %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h1>Добро пожаловать в Kanban System</h1>
+    <p>Управляйте проектами и задачами эффективно!</p>
+    <a class="btn btn-primary me-2" href="{% url 'register' %}">Регистрация</a>
+    <a class="btn btn-success" href="{% url 'login' %}">Вход</a>
+</div>
+{% endblock %}

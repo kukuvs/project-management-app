@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Создание проекта{% endblock %}
+
+{% comment %}
+Страница для создания нового проекта.
+{% endcomment %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 600px;">
+    <h2 class="mb-4">Создание проекта</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Создать проект</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{# Шаблон для создания и редактирования задач #}
+{% block title %}{% if task %}Редактирование задачи{% else %}Создание задачи{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 600px;">
+    <h2 class="mb-4">
+        {% if task %}
+            Редактирование задачи
+        {% else %}
+            Создание задачи
+        {% endif %}
+    </h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">
+            {% if task %}Сохранить изменения{% else %}Создать задачу{% endif %}
+        </button>
+    </form>
+</div>
+{% endblock %}
