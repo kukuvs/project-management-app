@@ -10,17 +10,16 @@
 После установки выполняется инициализация проекта.
 
 2. Установка зависимостей
-```uv sync```
-Этот шаг устанавливает зависимости, указанные в pyproject.toml и uv.lock.
-+перед запуском необходимо создать файл .env и заполнить его данными:
-SECRET_KEY=
+  ```uv sync```
+  Этот шаг устанавливает зависимости, указанные в pyproject.toml и uv.lock.
+  +перед запуском необходимо создать файл .env и заполнить его данными:
+  SECRET_KEY=
 
 Так же необходимо после установки зависимостей в среду необходимой активировать виртуальную среду
 
 3. Применение миграций
-Для инициализации базы данных выполняется миграция:
-```uv run python manage.py migrate```
-При возникновении ошибки no such table: django_session можно выполнить команды:
-
-```uv run python manage.py makemigrations```
-```uv run python manage.py migrate```
+  Для инициализации базы данных выполняется миграция:
+  ```uv run python manage.py migrate```
+  При возникновении ошибки no such table: django_session можно выполнить команды:
+  ```uv run python manage.py makemigrations```
+  ```uv run python manage.py migrate```
